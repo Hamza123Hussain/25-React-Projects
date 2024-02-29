@@ -1,0 +1,14 @@
+.modal{
+  
+
+    background-color: rgba(0, 0, 0, 0.76);
+}
+.modal-content {
+    position: absolute; /* Change to absolute positioning */
+    top: 30%; /* Center the modal vertically */
+    left: 50%; /* Center the modal horizontally */
+    transform: translate(-50%, -50%); /* Center the modal both horizontally and vertically */
+    padding:10px; /* Add padding to create space between text and border */
+    max-width: 80%; /* Set maximum width for modal content */
+    border: 1px solid wheat;
+}
