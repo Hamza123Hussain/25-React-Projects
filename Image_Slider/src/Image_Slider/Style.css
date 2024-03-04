@@ -24,10 +24,12 @@
   
   .arrow-left {
     left: 1rem;
+    cursor: pointer;
   }
   
   .arrow-right {
     right: 1rem;
+    cursor: pointer;
   }
   
   .circle-indicators {
