@@ -1,6 +1,6 @@
 import { useState } from "react";
-import data from "./data";
-import "./styles.css";
+import data from "./data"; // Importing sample data
+import "./styles.css"; // Importing CSS styles
 
 // Define the Accordion component
 export default function Accordion() {
@@ -8,6 +8,7 @@ export default function Accordion() {
   const [selected, setSelected] = useState(null); // For single selection
   const [enableMultiSelection, setEnableMultiSelection] = useState(false); // To enable/disable multi-selection
   const [multiple, setMultiple] = useState([]); // For multiple selection
+  const [prev, setPrev] = useState(); // To store the previously selected item
 
   // Function to handle single selection of items
   function handleSingleSelection(itemId) {
@@ -16,30 +17,36 @@ export default function Accordion() {
   }
 
   // Function to handle multiple selection of items
-  function handlemultipleselection(itemId) {
+  function handleMultipleSelection(itemId) {
     // Make a copy of the multiple array
     const multipleData = [...multiple];
 
-    // Check if multi-selection is enabled and the number of selected items is less than 2
-    if ( multipleData.length < 2) {
+    // Check if multi-selection is enabled and the number of selected items is less than 1
+    if (multipleData.length < 1) {
       const checkIfElementInArray = multipleData.indexOf(itemId);
 
       // If itemId doesn't exist in the array, add it; otherwise, remove it
       if (checkIfElementInArray === -1) {
         multipleData.push(itemId);
+        setPrev(itemId); // Store the previously selected item
       } else {
         multipleData.splice(checkIfElementInArray, 1); // Remove itemId from the array
       }
-      
+
       // Update the state with the new multiple array
       setMultiple(multipleData);
     } else {
-      // If multi-selection is disabled or the number of selected items is 2 or more,
-      // remove the item from the selection if it already exists in the array
+      // If multi-selection is disabled or the number of selected items is 1,
+      // remove the previous item from the selection and add the new one
       const checkIfElementInArray = multipleData.indexOf(itemId);
-      if (checkIfElementInArray !== -1) {
-        multipleData.splice(checkIfElementInArray, 1);
+
+      if (checkIfElementInArray === -1) {
+        multipleData.splice(prev); // Remove the previously selected item
+        multipleData.push(itemId); // Add the new item
+      } else {
+        multipleData.splice(checkIfElementInArray, 1); // Remove itemId from the array
       }
+
       // Update the state with the new multiple array
       setMultiple(multipleData);
     }
@@ -61,9 +68,9 @@ export default function Accordion() {
               {/* Title section of the accordion item */}
               <div
                 onClick={
-                  // If multi-selection is enabled, call handlemultipleselection function; otherwise, call handleSingleSelection function
+                  // If multi-selection is enabled, call handleMultipleSelection function; otherwise, call handleSingleSelection function
                   enableMultiSelection
-                    ? () => handlemultipleselection(dataItem.id)
+                    ? () => handleMultipleSelection(dataItem.id)
                     : () => handleSingleSelection(dataItem.id)
                 }
                 className="title"
@@ -78,9 +85,9 @@ export default function Accordion() {
                     <div className="acc-content ">{dataItem.answer}</div>
                   )
                 : // If multi-selection is disabled, show the content if the item is selected
-                selected === dataItem.id && (
-                  <div className="acc-content ">{dataItem.answer}</div>
-                )}
+                  selected === dataItem.id && (
+                    <div className="acc-content ">{dataItem.answer}</div>
+                  )}
             </div>
           ))
         ) : (
@@ -91,6 +98,7 @@ export default function Accordion() {
     </div>
   );
 }
+
 
 /*
 Learnings:
